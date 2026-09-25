@@ -21,7 +21,14 @@ export function WireframePreviewBridge() {
             target.pathname === window.location.pathname &&
             target.search === window.location.search
           ) {
-            window.location.hash = target.hash || '#/';
+            const hash = target.hash || '#/';
+            // reveal writes the URL up to 1s after a slide change, so the hash
+            // can already match while the deck shows another slide.
+            if (window.location.hash === hash) {
+              window.dispatchEvent(new HashChangeEvent('hashchange'));
+            } else {
+              window.location.hash = hash;
+            }
             return;
           }
           router.push(location);

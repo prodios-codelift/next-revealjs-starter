@@ -59,6 +59,17 @@ test('publishes the final hash after rapid slide changes', async () => {
   assert.equal(evaluate('window.lastLocation()'), '/#/2');
 });
 
+test('navigating to the hash reveal has not rewritten yet still moves the deck', async () => {
+  navigate('/#/1');
+  await waitForLocation('/#/1');
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  // reveal delays its hash write, so right after this the URL still reads #/1 while the deck is on slide 2.
+  pressInPreview('ArrowRight');
+  navigate('/#/1');
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  assert.equal(evaluate('window.lastLocation()'), '/#/1');
+});
+
 test('rejects protocol-relative locations', () => {
   const response = navigate('//evil.example/');
   assert.equal(response.error, 'Invalid preview location');
