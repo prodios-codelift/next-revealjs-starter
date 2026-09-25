@@ -163,7 +163,7 @@ function describe(el: Element) {
 
 function normalizeSourceFile(fileName: string | null | undefined) {
   if (!fileName || typeof fileName !== 'string') return null;
-  let file = fileName.split('?')[0] ?? '';
+  const file = fileName.split('?')[0] ?? '';
   const marker = 'next-revealjs-starter/';
   const markerIndex = file.indexOf(marker);
   if (markerIndex !== -1)
