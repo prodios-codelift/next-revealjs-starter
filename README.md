@@ -15,13 +15,13 @@ Open [http://localhost:3000](http://localhost:3000). Arrow keys move between sli
 
 ## Scripts
 
-| Script | What it does |
-| --- | --- |
-| `npm run dev` | Development server (the sandbox runs this) |
-| `npm run build` / `npm start` | Production build and server |
-| `npm run typecheck` | `next typegen` + `tsc --noEmit` |
-| `npm run lint` | ESLint |
-| `npm run export-pdf` | Exports the running deck to `public/deck/deck.pdf`, one 1920×1080 page per slide |
+| Script                        | What it does                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------- |
+| `npm run dev`                 | Development server (the sandbox runs this)                                       |
+| `npm run build` / `npm start` | Production build and server                                                      |
+| `npm run typecheck`           | `next typegen` + `tsc --noEmit`                                                  |
+| `npm run lint`                | ESLint                                                                           |
+| `npm run export-pdf`          | Exports the running deck to `public/deck/deck.pdf`, one 1920×1080 page per slide |
 
 `export-pdf` drives the `agent-browser` CLI and attaches `playwright-core` to its browser over CDP. Pass a URL and output path to override the defaults: `node scripts/export-pdf.mjs http://localhost:3000/ out.pdf`.
 
@@ -44,20 +44,9 @@ public/deck/            deck images and the exported PDF
 
 ## Autopilot preview bridge
 
-`src/components/wireframe-preview-bridge.tsx` (mounted in `src/app/layout.tsx`) connects the app to the autopilot iframe over `postMessage`, using the same protocol as `next-shadcn-starter`:
+`src/components/wireframe-preview-bridge.tsx` (mounted in `src/app/layout.tsx`) connects the app to the autopilot iframe over `postMessage`:
 
 - **Route navigation:** the host can read and set the location. Slide changes are reported as hash changes, and navigating to `/#/<n>` moves the deck to that slide.
 - **Element picker:** the host can start a picker. In development, `babel.config.js` stamps `data-inspector-*` attributes on JSX, so a picked element reports its source file and line (for example `src/deck/presentation.tsx:30`). Production builds don't include these attributes.
 
-## Sandbox snapshot
-
-The snapshot needs:
-
-1. This repo at `/vercel/sandbox/next-revealjs-starter`, with dependencies installed (`npm ci`).
-2. The `agent-browser` CLI and its browser installed globally (`npm i -g agent-browser && agent-browser install --with-deps`). The skill's checks and `npm run export-pdf` depend on it.
-
 The sandbox passes `DEV_ORIGINS` (the preview host) to `next dev`; `next.config.ts` turns it into `allowedDevOrigins`.
-
-## Credits
-
-The design system, style presets and bold template pack are adapted from [frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, see [`.agents/skills/slides/LICENSE-frontend-slides`](.agents/skills/slides/LICENSE-frontend-slides)).
