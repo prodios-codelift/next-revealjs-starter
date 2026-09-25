@@ -122,6 +122,7 @@ End with a short summary and stop.
 | File | Purpose | When to read |
 | --- | --- | --- |
 | [reveal-template.md](reveal-template.md) | File contract, deck/preview/theme code | Always |
+| `node_modules/@revealjs/react/README.md` | Full `@revealjs/react` API: `Deck`/`Slide` props, `Fragment`, `Stack`, `Code`, `Markdown`, auto-animate, backgrounds, `useReveal` | When a slide needs a reveal feature `reveal-template.md` doesn't show |
 | [STYLE_PRESETS.md](STYLE_PRESETS.md) | 12 safe presets | previews |
 | [bold-template-pack/selection-index.json](bold-template-pack/selection-index.json) | Compact bold template metadata | previews |
 | `bold-template-pack/templates/<slug>/preview.md` | Style card for a shortlisted template | previews, after shortlisting |
