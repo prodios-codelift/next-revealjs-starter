@@ -14,12 +14,15 @@
   background: var(--stage-bg, #000);
 }
 
-/* 2. Slides fill the fixed stage exactly; theme padding stays inside it */
+/* 2. Slides fill the fixed stage exactly; theme padding stays inside it.
+   reveal sets each slide's inline `display` from the deck's `display: "flex"`
+   config, so slides are flex columns and layout classes on <Slide> apply. */
 .reveal .slides {
   text-align: left;
 }
 
 .reveal .slides section {
+  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   padding: 0;

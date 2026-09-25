@@ -40,8 +40,6 @@
 }
 
 .reveal.deck-theme .slide-title {
-  display: flex;
-  flex-direction: column;
   justify-content: flex-end;
 }
 

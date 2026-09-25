@@ -34,6 +34,18 @@ test('fills the letterbox with the theme stage colour', () => {
   assert.equal(bg, 'rgb(17, 17, 17)');
 });
 
+test('layout classes on <Slide> control the slide box', () => {
+  // reveal writes each slide's inline `display` from its `display` config;
+  // .slide-title's flex-end layout only applies if that mode is flex.
+  const gap = evaluate(`(() => {
+    const slide = document.querySelector('.reveal .slides > section.present');
+    const title = slide.querySelector('h1').getBoundingClientRect();
+    const box = slide.getBoundingClientRect();
+    return Math.round((box.bottom - title.bottom) / (box.height / 1080));
+  })()`);
+  assert.ok(gap < 300, `title sits ${gap}px above the slide bottom`);
+});
+
 test('opens the slide named in the URL hash', async () => {
   await openDeck(`${APP_URL}/#/2`);
   const index = evaluate(

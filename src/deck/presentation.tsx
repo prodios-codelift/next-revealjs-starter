@@ -16,6 +16,7 @@ export function Presentation() {
         minScale: 0.05,
         maxScale: 4,
         center: false,
+        display: "flex",
         hash: true,
         transition: "fade",
       }}
