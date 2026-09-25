@@ -9,7 +9,7 @@ Reference architecture for slides in this app. Every deck is a fixed 1920×1080 
 | `src/deck/presentation.tsx` | The deck: one `<Slide>` per slide |
 | `src/deck/theme.css` | The chosen style, every selector under `.reveal.deck-theme` |
 | `src/deck/fonts.ts` | `next/font/google` fonts, exported as `deckFontVariables` |
-| `src/app/page.tsx` | Renders the deck; only change it if the wrapper must change |
+| `src/app/page.tsx` | Renders the deck; set `export const metadata = { title: "<deck title>" }` here (the tab title), otherwise leave it |
 | `public/deck/` | Images and the exported PDF, referenced as `/deck/<file>` |
 | `src/app/preview/{a,b,c}/` | Preview routes (previews mode only) |
 | `src/app/previews/page.tsx` | Preview comparison page (previews mode only) |
@@ -136,6 +136,7 @@ export const deckFontVariables = `${displayFont.variable} ${bodyFont.variable}`;
 Rules:
 
 - Every selector starts with `.reveal.deck-theme` (or `.reveal-viewport:has(.reveal.deck-theme)` for `--stage-bg`). Palette blocks written as `:root { … }` in a style reference go on the scope class instead.
+- Slide padding is always `padding: var(--slide-padding)` with the value on the scope class: PDF export restores padding from that token (`reveal-base.css`), so a hard-coded slide padding disappears in the PDF.
 - All sizes in px at the 1920×1080 design size. No `vw`, `vh`, `clamp()` for slide content, no `@media` breakpoints (the one exception is `prefers-reduced-motion`, already in `reveal-base.css`).
 - Never negate CSS functions directly (`-clamp()` is ignored) — use `calc(-1 * …)`.
 - Decorative shapes that deliberately run off the slide edge get `data-bleed` on the element so `verify-slides.js` allows them.

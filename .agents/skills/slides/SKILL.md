@@ -70,7 +70,7 @@ Produce three title-slide previews of genuinely different styles.
 
 ## Mode: deck
 
-1. The picked letter is in `style`. Promote it:
+1. The picked letter is in `style`. Promote it (where the picked preview and the template's `design.md` disagree, the preview wins — it is what the user chose; `design.md` fills in everything the preview didn't define):
    - `src/app/preview/<x>/preview-<x>.css` → `src/deck/theme.css`, replacing every `.reveal.preview-<x>` with `.reveal.deck-theme`.
    - `src/app/preview/<x>/fonts.ts` → `src/deck/fonts.ts`.
    - Apply any mix notes from the prompt.
@@ -99,7 +99,7 @@ Produce three title-slide previews of genuinely different styles.
 
    `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements when looking for overlaps, so step 3 must confirm no decoration covers text.
 3. Screenshot every slide (`agent-browser open http://localhost:3000/#/<n>`, `agent-browser wait 1500` for fonts and entrance animations, then `agent-browser screenshot`) and look at each one; for previews, one screenshot per `/preview/<x>` route plus `/previews`. Check the design reads as intended and that no absolutely-positioned decoration covers text — not just that the checker passes.
-4. Authenticity scan: `agent-browser eval "document.querySelector('.reveal .slides').innerText"` and confirm none of the banned words from **Slide Authenticity** appear.
+4. Authenticity scan over every slide (`innerText` would only return the current one): `agent-browser eval "[...document.querySelectorAll('.reveal .slides section')].map((s) => s.textContent).join('\\n')"` and confirm none of the banned words from **Slide Authenticity** appear.
 
 ## PDF Export (only when the prompt asks)
 
@@ -107,7 +107,7 @@ Produce three title-slide previews of genuinely different styles.
 npm run export-pdf
 ```
 
-Writes `public/deck/deck.pdf` (served at `/deck/deck.pdf`), one 1920×1080 page per slide. Animations are flattened to their final state. If the page count is higher than the slide count, a slide overflows — fix it and re-export.
+Writes `public/deck/deck.pdf` (served at `/deck/deck.pdf`), one 1920×1080 page per slide. Animations are flattened to their final state. If the page count is higher than the slide count, a slide overflows — fix it and re-export. Before exporting, confirm print mode renders every slide: `agent-browser open "http://localhost:3000/?print-pdf"`, then `agent-browser eval "[...document.querySelectorAll('.reveal .pdf-page > section')].every((s) => getComputedStyle(s).display !== 'none')"` must be `true`. The export closes the agent-browser session; `open` again before any further check.
 
 ## Final Summary
 

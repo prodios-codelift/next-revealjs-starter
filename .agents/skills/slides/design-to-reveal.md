@@ -12,6 +12,7 @@ Every `bold-template-pack/templates/<slug>/design.md` was written for a standalo
 | `[data-anim]` entrance attributes, IntersectionObserver reveals | `.enter*` classes keyed off `section.present`, or `<Fragment>` for presenter-stepped reveals (see [animation-patterns.md](animation-patterns.md)) |
 | Zero-duration / "instant cut" transitions | `config={{ transition: "none" }}` |
 | Nav dots, page counter, progress bar chrome | reveal `controls`, `progress`, `slideNumber` config options; style them under the scope class (`.reveal.deck-theme .controls`, `.progress`, `.slide-number`) |
+| Slide as a grid (`grid-template-rows: auto 1fr auto`) | Slides are flex columns (see reveal-template.md): header, a body child with `flex: 1`, footer |
 | `100vw × 100vh` slide, `vw`/`vh`/`clamp()` sizes | Convert to px at 1920×1080: `1vw = 19.2px`, `1vh = 10.8px`; for `clamp(min, fluid, max)` use the fluid value at 1920×1080, clamped |
 | `:root { --token: … }` | Same tokens on `.reveal.deck-theme` (or `.reveal.preview-x`) |
 | `<link>` to Google Fonts / Fontshare | `next/font/google` in `fonts.ts`; closest Google font if the original is Fontshare-only |
@@ -23,7 +24,7 @@ Every `bold-template-pack/templates/<slug>/design.md` was written for a standalo
 ## Steps
 
 1. Read the selected template's `design.md` once, fully.
-2. Write tokens (colours, type scale, spacing) on the scope class.
+2. Write tokens (colours, type scale, spacing) on the scope class. Start from the picked preview's type scale; converted `vw` sizes are proportions, and for speaker-led decks body text stays at 28px or larger.
 3. Write the slide surface and typography rules.
 4. For each layout the outline needs (title, section, content, quote, comparison, stats, closing), write one layout class, following the template's component grammar. Design layouts the template doesn't cover from its own vocabulary — don't import patterns from another style.
 5. Use `template.html` from the source library only if `design.md` is missing a critical implementation detail.
