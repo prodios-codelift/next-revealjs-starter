@@ -30,3 +30,18 @@ export async function openDeck(url) {
   ab('open', url);
   await waitFor(() => evaluate("document.querySelector('.reveal.ready') !== null"));
 }
+
+export const HOST_PORT = Number(process.env.HOST_PORT ?? 4173);
+
+/** Opens the cross-origin host harness with the app in its iframe and waits for the RPC connection. */
+export async function openHost() {
+  const app = encodeURIComponent(`${APP_URL}/`);
+  ab('open', `http://localhost:${HOST_PORT}/tests/fixtures/bridge-host.html?app=${app}`);
+  await waitFor(() => evaluate('window.connected()'), 20_000);
+}
+
+/** Clicks into the iframe so keyboard input reaches the deck, then presses a key. */
+export function pressInPreview(key) {
+  ab('click', '#preview');
+  ab('press', key);
+}

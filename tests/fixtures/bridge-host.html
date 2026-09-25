@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Bridge host</title>
+<style>
+  body { margin: 0; }
+  iframe { border: 0; width: 1280px; height: 720px; }
+</style>
+<iframe id="preview"></iframe>
+<script>
+  const CHANNEL = 'prodios:wireframe-preview-rpc';
+  const target = new URLSearchParams(location.search).get('app');
+  const iframe = document.getElementById('preview');
+  const pending = new Map();
+  let port = null;
+  let nextId = 0;
+
+  window.rpcLog = [];
+
+  window.addEventListener('message', (event) => {
+    if (event.source !== iframe.contentWindow) return;
+    if (event.data?.channel !== CHANNEL || event.data.type !== 'ready') return;
+    window.rpcLog.push({ ready: event.data.capabilities });
+    const channel = new MessageChannel();
+    port = channel.port1;
+    port.onmessage = ({ data }) => {
+      window.rpcLog.push(data);
+      if (data.type === 'response' && pending.has(data.id)) {
+        pending.get(data.id)(data);
+        pending.delete(data.id);
+      }
+    };
+    iframe.contentWindow.postMessage(
+      { channel: CHANNEL, type: 'connect', version: 1 },
+      new URL(target).origin,
+      [channel.port2],
+    );
+  });
+
+  window.connected = () => port !== null;
+  window.rpc = (method, params) =>
+    new Promise((resolve) => {
+      const id = String(++nextId);
+      pending.set(id, resolve);
+      port.postMessage({ type: 'request', id, method, params });
+    });
+  window.lastLocation = () =>
+    [...window.rpcLog].reverse().find((m) => m.event === 'locationChanged')?.location;
+
+  iframe.src = target;
+</script>
