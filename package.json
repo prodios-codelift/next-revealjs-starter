@@ -18,6 +18,8 @@
     "reveal.js": "6.0.2"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-typescript": "^7.29.7",
+    "@react-dev-inspector/babel-plugin": "^2.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
