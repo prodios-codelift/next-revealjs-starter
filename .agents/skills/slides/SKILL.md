@@ -107,7 +107,7 @@ Produce three title-slide previews of genuinely different styles.
 npm run export-pdf
 ```
 
-Writes `public/deck/deck.pdf` (served at `/deck/deck.pdf`), one 1920×1080 page per slide. Animations are flattened to their final state. If the page count is higher than the slide count, a slide overflows — fix it and re-export. Before exporting, confirm print mode renders every slide: `agent-browser open "http://localhost:3000/?print-pdf"`, then `agent-browser eval "[...document.querySelectorAll('.reveal .pdf-page > section')].every((s) => getComputedStyle(s).display !== 'none')"` must be `true`. The export closes the agent-browser session; `open` again before any further check.
+Writes `public/deck/deck.pdf` (served at `/deck/deck.pdf`), one 1920×1080 page per slide; fragments print in their final state. The PDF shows exactly what the live deck shows, so content that overflows a slide is clipped there too — the **Checks** above are what catch overflow, not the export. The script exits 3 if the PDF doesn't come out as one page per slide. Before exporting, confirm print mode renders every slide: `agent-browser open "http://localhost:3000/?print-pdf"`, then `agent-browser eval "[...document.querySelectorAll('.reveal .pdf-page > section')].every((s) => getComputedStyle(s).display !== 'none')"` must be `true`. The export closes the agent-browser session; `open` again before any further check.
 
 ## Final Summary
 
