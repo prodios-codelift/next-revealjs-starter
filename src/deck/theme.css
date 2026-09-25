@@ -13,6 +13,7 @@
   --ink: #1c1b19;
   --muted: #6b6760;
   --accent: #c2410c;
+  --slide-padding: 120px 144px;
   color: var(--ink);
   font-family: var(--font-body), sans-serif;
   font-size: 32px;
@@ -20,7 +21,7 @@
 
 .reveal.deck-theme .slides section {
   background: var(--bg);
-  padding: 120px 144px;
+  padding: var(--slide-padding);
 }
 
 .reveal.deck-theme h1,

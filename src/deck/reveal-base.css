@@ -38,7 +38,19 @@
   max-height: 100%;
 }
 
-/* 4. Reduced motion */
+/* 4. PDF export (reveal print mode, /?print-pdf).
+   reveal's print CSS forces `display: block` and `padding: 0` with unlayered
+   !important, and Tailwind's preflight hides [hidden] slides from @layer base,
+   which outranks it (important declarations in layers beat unlayered ones).
+   Restore every slide from the same layer; themes set padding via --slide-padding. */
+@layer base {
+  .reveal .slides .pdf-page > section {
+    display: flex !important;
+    padding: var(--slide-padding, 0) !important;
+  }
+}
+
+/* 5. Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal *,
   .reveal *::before,

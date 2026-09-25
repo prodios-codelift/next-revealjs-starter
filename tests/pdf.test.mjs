@@ -4,7 +4,17 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { APP_URL } from './helpers.mjs';
+import { APP_URL, ab, evaluate } from './helpers.mjs';
+
+test('print mode renders every slide with its layout and padding', () => {
+  ab('open', `${APP_URL}/?print-pdf`);
+  ab('wait', '.reveal .pdf-page');
+  const slides = evaluate(`[...document.querySelectorAll('.reveal .pdf-page > section')].map((s) => {
+    const style = getComputedStyle(s);
+    return { display: style.display, padding: style.paddingTop };
+  })`);
+  assert.deepEqual(slides, Array(3).fill({ display: 'flex', padding: '120px' }));
+});
 
 test('exports one 1920×1080 page per slide', () => {
   const out = join(mkdtempSync(join(tmpdir(), 'deck-pdf-')), 'deck.pdf');
