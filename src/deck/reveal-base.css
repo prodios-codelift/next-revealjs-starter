@@ -1,0 +1,47 @@
+/* ===========================================
+   FIXED 16:9 STAGE — reveal.js base
+   Shipped with the starter. The slides skill never edits this file;
+   the chosen style lives in theme.css.
+   Slides are authored at 1920×1080 and reveal scales the whole stage.
+   =========================================== */
+
+/* 1. Full-window deck, letterboxed in the theme's stage colour */
+.deck-root {
+  height: 100dvh;
+}
+
+.reveal-viewport {
+  background: var(--stage-bg, #000);
+}
+
+/* 2. Slides fill the fixed stage exactly; theme padding stays inside it */
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 3. Keep media inside authored slide bounds */
+.reveal img,
+.reveal video,
+.reveal canvas,
+.reveal svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* 4. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal *,
+  .reveal *::before,
+  .reveal *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,58 @@
+/* ===========================================
+   PLACEHOLDER THEME
+   Replaced by the slides skill with the chosen style.
+   Every selector is scoped under .reveal.deck-theme.
+   =========================================== */
+
+.reveal-viewport:has(.reveal.deck-theme) {
+  --stage-bg: #111111;
+}
+
+.reveal.deck-theme {
+  --bg: #f4f1ea;
+  --ink: #1c1b19;
+  --muted: #6b6760;
+  --accent: #c2410c;
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+  font-size: 32px;
+}
+
+.reveal.deck-theme .slides section {
+  background: var(--bg);
+  padding: 120px 144px;
+}
+
+.reveal.deck-theme h1,
+.reveal.deck-theme h2 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0 0 40px;
+}
+
+.reveal.deck-theme h1 {
+  font-size: 144px;
+}
+
+.reveal.deck-theme h2 {
+  font-size: 88px;
+}
+
+.reveal.deck-theme .slide-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.reveal.deck-theme .subtitle {
+  color: var(--muted);
+  font-size: 40px;
+}
+
+.reveal.deck-theme .rule {
+  width: 160px;
+  height: 8px;
+  background: var(--accent);
+  margin-bottom: 48px;
+}
