@@ -37,6 +37,7 @@ export function Presentation() {
         minScale: 0.05,
         maxScale: 4,
         center: false,
+        display: "flex",
         hash: true,
         transition: "fade",
       }}
@@ -63,9 +64,10 @@ export function Presentation() {
 
 Rules:
 
-- Keep `width`, `height`, `margin`, `center: false` and `hash: true` exactly as above. `transition` comes from the chosen style.
+- Keep `width`, `height`, `margin`, `center: false`, `display: "flex"` and `hash: true` exactly as above. `transition` comes from the chosen style.
 - One `{/* === NAME === */}` comment per slide.
 - Layout classes go on `<Slide className>`; the slide `<section>` is always 1920×1080 with `box-sizing: border-box`, so padding stays inside the stage.
+- Slides are flex columns: reveal writes each slide's inline `display` from the deck's `display: "flex"` config, so never set `display` on a slide class (it is overwritten). Use `justify-content`, `align-items` and `gap` on the slide class; for a grid layout, put the grid on one child with `flex: 1`.
 - Speaker notes go in `notes`.
 - Vertical groups: wrap slides in `<Stack>` only when the outline asks for drill-down slides.
 - Images: `<img src="/deck/photo.jpg" alt="…" />` with the file in `public/deck/`. Don't use `next/image` inside slides (reveal scales the stage; `next/image` responsive sizing fights it).
@@ -126,7 +128,7 @@ export const deckFontVariables = `${displayFont.variable} ${bodyFont.variable}`;
 }
 
 /* === LAYOUTS === */
-.reveal.deck-theme .slide-title { display: flex; flex-direction: column; justify-content: flex-end; }
+.reveal.deck-theme .slide-title { justify-content: flex-end; }
 
 /* === ANIMATIONS === (see animation-patterns.md) */
 ```
@@ -165,6 +167,7 @@ export function PreviewDeck() {
         height: 1080,
         margin: 0,
         center: false,
+        display: "flex",
         controls: false,
         progress: false,
         transition: "none",

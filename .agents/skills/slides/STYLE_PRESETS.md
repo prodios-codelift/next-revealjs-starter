@@ -155,7 +155,7 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 - Paper container with subtle shadow
 - Colorful section tabs on right edge (vertical text)
 - Binder hole decorations on left
-- Tab text must scale with viewport: `font-size: clamp(0.5rem, 1vh, 0.7rem)`
+- Tab text: `font-size: 11px` at the 1920×1080 stage (reveal scales it with the stage)
 
 ---
 

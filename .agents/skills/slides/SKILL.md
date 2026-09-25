@@ -7,7 +7,7 @@ description: Build reveal.js presentations in this Next.js starter from a brief 
 
 You turn a presentation brief into a reveal.js deck in this Next.js app. You run without a conversation: everything you need is in the prompt. When something is missing, make the most reasonable choice and list it under **Assumptions** in your final summary. Never stop to ask.
 
-Before starting, read [AGENTS.md](../../../AGENTS.md) and [reveal-template.md](reveal-template.md). The app is already running at `http://localhost:3000`; don't start another server.
+Before starting, read [AGENTS.md](../../../AGENTS.md) and [reveal-template.md](reveal-template.md). The Next.js guide that matters here is `node_modules/next/dist/docs/01-app/03-api-reference/02-components/font.md` (`next/font/google`). The app is already running at `http://localhost:3000`; don't start another server.
 
 ## Input
 
@@ -48,7 +48,7 @@ Never let reading-first become clutter: if a slide starts to overflow, split or 
 
 ### Slide Authenticity (non-negotiable)
 
-Slides must read as the user's real deck. Never render on a slide: `preview`, `template`, `preset`, `style option`, `Option A/B/C`, `wildcard`, `custom`, `generated from`, file names, paths, template or slug names, or requirement notes ("sharp and provocative", "audience: …"). Chrome may only use real deck content: deck title, section title, date, author, company, page number, or phrases from the user's material.
+Slides must read as the user's real deck. Never render on a slide: `preview`, `template`, `preset`, `style option`, `Option A/B/C`, `wildcard`, `custom`, `generated from`, file names, paths, template or slug names, or requirement notes ("sharp and provocative", "audience: …"). Chrome may only use real deck content: deck title, section title, date, author, company or team, the occasion ("Quarterly Business Review"), page number, or phrases from the user's material. Descriptions of the audience, tone, style or process are never slide content.
 
 ## Mode: previews
 
@@ -63,7 +63,7 @@ Produce three title-slide previews of genuinely different styles.
    - Conservative/high-stakes decks (board, legal, regulatory, healthcare, investor updates): a restrained A, a calm high-formality B, an authoritative (not decorative) C.
    - Expressive decks: A stays a readable fallback, B is strong, C is adventurous and context-specific.
    - If bold matches are weak, make C custom rather than forcing a template.
-3. For bold picks, read only their `preview.md` cards (paths in the index).
+3. For bold picks, read only their `preview.md` cards (paths in the index). Cards contain tokens such as `{colors.gold}` or `{typography.label.fontFamily}`: resolve them from the YAML front matter at the top of that template's `design.md` (up to the second `---`) and read nothing past it. Never guess a token's value.
 4. A custom wildcard needs a deliberate visual thesis — distinctive typography, a committed palette, a recognizable layout system, one strong graphic device — and must imply a system that extends to section, content, quote, comparison and closing slides.
 5. Write the four files per letter and the comparison page exactly as in [reveal-template.md](reveal-template.md) ("Preview Routes", "Comparison Page"). Each preview is the user's real title slide.
 6. Run **Checks** on `/preview/a`, `/preview/b`, `/preview/c` and `/previews`.
@@ -93,11 +93,12 @@ Produce three title-slide previews of genuinely different styles.
    ```bash
    agent-browser set viewport 1920 1080
    agent-browser open http://localhost:3000/
+   agent-browser wait 1500
    agent-browser eval "$(cat .agents/skills/slides/verify-slides.js)"
    ```
 
-   `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration.
-3. Screenshot every slide (`agent-browser open http://localhost:3000/#/<n>` then `agent-browser screenshot`) and look at each one. Check the design reads as intended, not just that it passes.
+   `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements when looking for overlaps, so step 3 must confirm no decoration covers text.
+3. Screenshot every slide (`agent-browser open http://localhost:3000/#/<n>`, `agent-browser wait 1500` for fonts and entrance animations, then `agent-browser screenshot`) and look at each one; for previews, one screenshot per `/preview/<x>` route plus `/previews`. Check the design reads as intended and that no absolutely-positioned decoration covers text — not just that the checker passes.
 4. Authenticity scan: `agent-browser eval "document.querySelector('.reveal .slides').innerText"` and confirm none of the banned words from **Slide Authenticity** appear.
 
 ## PDF Export (only when the prompt asks)
