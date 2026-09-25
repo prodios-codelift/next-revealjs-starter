@@ -8,6 +8,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+# Slides
+
+This is a reveal.js presentation app. When building or changing slides, follow [.agents/skills/slides/SKILL.md](.agents/skills/slides/SKILL.md).
+
 # Before finishing a task
 
 Run `npm run typecheck` and fix any TypeScript errors before considering the task complete. Do not finish with a failing typecheck.
