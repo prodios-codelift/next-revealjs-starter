@@ -97,7 +97,7 @@ Produce three title-slide previews of genuinely different styles.
    agent-browser eval "$(cat .agents/skills/slides/verify-slides.js)"
    ```
 
-   `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements when looking for overlaps, so step 3 must confirm no decoration covers text.
+   `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements and reveal's `.r-stack` (children layered on purpose) when looking for overlaps, so step 3 must confirm no decoration covers text.
 3. Screenshot every slide (`agent-browser open http://localhost:3000/#/<n>`, `agent-browser wait 1500` for fonts and entrance animations, then `agent-browser screenshot`) and look at each one; for previews, one screenshot per `/preview/<x>` route plus `/previews`. Check the design reads as intended and that no absolutely-positioned decoration covers text — not just that the checker passes.
 4. Authenticity scan over every slide (`innerText` would only return the current one): `agent-browser eval "[...document.querySelectorAll('.reveal .slides section')].map((s) => s.textContent).join('\\n')"` and confirm none of the banned words from **Slide Authenticity** appear.
 

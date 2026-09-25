@@ -55,6 +55,14 @@
       issues.push({ slide: label, type: 'missing', element: '', detail: 'no present slide after navigation' });
       continue;
     }
+    // Measure the settled layout: jump entrance transitions/animations to their end state.
+    for (const animation of slide.getAnimations({ subtree: true })) {
+      try {
+        animation.finish();
+      } catch {
+        // Infinite animations cannot finish; they don't affect layout checks.
+      }
+    }
     const bounds = slide.getBoundingClientRect();
 
     for (const el of slide.querySelectorAll('*')) {
@@ -84,7 +92,8 @@
         issues.push({ slide: label, type: 'out-of-bounds', element: describe(el), detail: 'extends past the slide edge' });
       }
 
-      if (['grid', 'inline-grid', 'flex', 'inline-flex'].includes(style.display)) {
+      // .r-stack (reveal) deliberately layers its children in one grid cell.
+      if (['grid', 'inline-grid', 'flex', 'inline-flex'].includes(style.display) && !el.classList.contains('r-stack')) {
         const panels = [...el.children].filter(
           (child) => isRendered(child) && !['absolute', 'fixed'].includes(getComputedStyle(child).position),
         );

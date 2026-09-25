@@ -46,6 +46,14 @@ test('allows elements marked data-bleed', async () => {
   assert.deepEqual((await verify('bleed')).issues, []);
 });
 
+test('measures after entrance animations settle', async () => {
+  assert.deepEqual((await verify('entrance')).issues, []);
+});
+
+test('allows r-stack children to share one grid cell', async () => {
+  assert.deepEqual((await verify('r-stack')).issues, []);
+});
+
 test('checks vertical slides and labels them h/v', async () => {
   const report = await verify('vertical');
   assert.equal(report.slides, 2);
