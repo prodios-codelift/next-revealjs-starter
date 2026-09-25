@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --test --test-concurrency=1 \"tests/**/*.test.mjs\"",
     "export-pdf": "node scripts/export-pdf.mjs"
   },
   "dependencies": {

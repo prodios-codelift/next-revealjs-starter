@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# next-revealjs-starter
 
-## Getting Started
+The sandbox starter behind prodios-autopilot **presentation** sessions: a Next.js app that renders one [reveal.js](https://revealjs.com) deck on a fixed 1920×1080 stage, plus the agent skill that builds those decks.
 
-First, run the development server:
+Autopilot provisions a sandbox from a snapshot of this repo, runs `npm run dev`, and shows the app in its preview iframe. A builder agent follows [`.agents/skills/slides/SKILL.md`](.agents/skills/slides/SKILL.md) to write three style previews, then the full deck, then revisions.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Arrow keys move between slides, and the slide number is kept in the URL hash (`/#/2`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Development server (the sandbox runs this) |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run typecheck` | `next typegen` + `tsc --noEmit` |
+| `npm run lint` | ESLint |
+| `npm run export-pdf` | Exports the running deck to `public/deck/deck.pdf`, one 1920×1080 page per slide |
 
-## Learn More
+`export-pdf` drives the `agent-browser` CLI and attaches `playwright-core` to its browser over CDP. Pass a URL and output path to override the defaults: `node scripts/export-pdf.mjs http://localhost:3000/ out.pdf`.
 
-To learn more about Next.js, take a look at the following resources:
+## Layout
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/deck/
+  presentation.tsx      the deck (client component, @revealjs/react)
+  theme.css             the chosen style, scoped under .reveal.deck-theme
+  fonts.ts              next/font fonts for the deck
+  reveal-base.css       fixed-stage base; the builder never edits it
+src/app/page.tsx        renders the deck
+src/app/preview/, src/app/previews/
+                        style previews (written by the builder, deleted once a style is picked)
+public/deck/            deck images and the exported PDF
+.agents/skills/slides/  the builder skill: style presets, bold templates, reveal patterns, verify-slides.js
+.agents/skills/agent-browser/
+                        browser automation used for visual checks and PDF export
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Autopilot preview bridge
 
-## Deploy on Vercel
+`src/components/wireframe-preview-bridge.tsx` (mounted in `src/app/layout.tsx`) connects the app to the autopilot iframe over `postMessage`, using the same protocol as `next-shadcn-starter`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Route navigation:** the host can read and set the location. Slide changes are reported as hash changes, and navigating to `/#/<n>` moves the deck to that slide.
+- **Element picker:** the host can start a picker. In development, `babel.config.js` stamps `data-inspector-*` attributes on JSX, so a picked element reports its source file and line (for example `src/deck/presentation.tsx:30`). Production builds don't include these attributes.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Sandbox snapshot
+
+The snapshot needs:
+
+1. This repo at `/vercel/sandbox/next-revealjs-starter`, with dependencies installed (`npm ci`).
+2. The `agent-browser` CLI and its browser installed globally (`npm i -g agent-browser && agent-browser install --with-deps`). The skill's checks and `npm run export-pdf` depend on it.
+
+The sandbox passes `DEV_ORIGINS` (the preview host) to `next dev`; `next.config.ts` turns it into `allowedDevOrigins`.
+
+## Credits
+
+The design system, style presets and bold template pack are adapted from [frontend-slides](https://github.com/zarazhangrui/frontend-slides) (MIT, see [`.agents/skills/slides/LICENSE-frontend-slides`](.agents/skills/slides/LICENSE-frontend-slides)).
