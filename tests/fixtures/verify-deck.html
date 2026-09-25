@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>verify-slides fixture</title>
+<link rel="stylesheet" href="/node_modules/reveal.js/dist/reveal.css" />
+<link rel="stylesheet" href="/src/deck/reveal-base.css" />
+<style>
+  .reveal .slides section { padding: 80px; font: 40px/1.2 sans-serif; }
+  .box { width: 400px; height: 100px; overflow: hidden; }
+  .grid { display: grid; grid-template-columns: 600px 600px; }
+</style>
+<div class="deck-root">
+  <div class="reveal"><div class="slides" id="slides"></div></div>
+</div>
+<script src="/node_modules/reveal.js/dist/reveal.js"></script>
+<script>
+  const CASES = {
+    clean: `
+      <section><h1>Fits</h1><p>Short line.</p></section>
+      <section><div class="grid"><div>Left</div><div>Right</div></div></section>`,
+    clipped: `<section><div class="box">${'Too much text for this box. '.repeat(20)}</div></section>`,
+    'out-of-bounds': `<section><div style="width: 2400px">Wider than the stage</div></section>`,
+    overlap: `<section><div class="grid"><div>Left</div><div style="margin-left: -200px">Right</div></div></section>`,
+    fragment: `<section><h1>Title</h1><div class="fragment" style="width: 2400px">Hidden until stepped</div></section>`,
+    bleed: `<section><div data-bleed style="width: 2400px">Intentional bleed</div></section>`,
+    vertical: `<section><section><p>Top</p></section><section><div style="width: 2400px">Below</div></section></section>`,
+  };
+  document.getElementById('slides').innerHTML = CASES[new URLSearchParams(location.search).get('case')];
+  Reveal.initialize({ width: 1920, height: 1080, margin: 0, hash: true, center: false, transition: 'slide' });
+</script>
