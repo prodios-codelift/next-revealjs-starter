@@ -87,6 +87,7 @@ export const deckFontVariables = `${displayFont.variable} ${bodyFont.variable}`;
 - Use the style's fonts. `next/font/google` export names use underscores for spaces (`Instrument_Sans`, `Space_Grotesk`, `Cormorant_Garamond`).
 - A variable font needs no `weight`; a static one needs `weight: ["400", "700"]` etc. If a style names a Fontshare-only font, pick the closest Google font and say so in your summary.
 - Keep the export name `deckFontVariables`; `src/app/page.tsx` imports it.
+- Run `npm run typecheck` immediately after writing or editing any `fonts.ts`, before opening a page, and fix it until it passes. `next dev` compiles fonts as soon as a page loads, and an invalid family or weight breaks every route — typecheck catches it first (each font's allowed weights are typed).
 
 ## Theme — `src/deck/theme.css`
 
