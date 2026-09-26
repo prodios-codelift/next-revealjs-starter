@@ -15,6 +15,7 @@ The prompt gives you:
 
 - `mode`: `previews`, `deck`, or `revise`
 - **Brief**: title, audience, occasion, mood/vibe (optional), density (`speaker-led` or `reading-first`), slide outline (per slide: heading, key points, notes, image references)
+- `mode: previews` only, optional — **Exclude styles**: style names or template slugs already shown to the user; none of them may be chosen again
 - `mode: deck` only — `style`: `a`, `b` or `c` (the preview to promote), plus optional mix notes
 - `mode: revise` only — the requested change, and optionally **Selected elements** (route, source `file:line:col`, component, selector, text, outerHTML)
 
@@ -52,21 +53,20 @@ Slides must read as the user's real deck. Never render on a slide: `preview`, `t
 
 ## Mode: previews
 
-Produce three title-slide previews of genuinely different styles.
+Produce three title-slide previews: three different, well-argued answers to this brief — not three random looks.
 
-1. Read [STYLE_PRESETS.md](STYLE_PRESETS.md) and [bold-template-pack/selection-index.json](bold-template-pack/selection-index.json). Do not read any `design.md` yet.
-2. Pick the mix:
-   - **A** — one safe preset from `STYLE_PRESETS.md`.
-   - **B** — one bold template, matched on `mood`, `tone`, `best_for`, `avoid_for`, `formality`, `density`, `scheme` (treat `best_for` as a soft signal).
-   - **C** — wildcard: a second bold template or a custom design, whichever gives the strongest useful contrast for this occasion.
-   - If the brief names a preset or template, it takes one slot and the others are chosen around it.
-   - Conservative/high-stakes decks (board, legal, regulatory, healthcare, investor updates): a restrained A, a calm high-formality B, an authoritative (not decorative) C.
-   - Expressive decks: A stays a readable fallback, B is strong, C is adventurous and context-specific.
-   - If bold matches are weak, make C custom rather than forcing a template.
-3. For bold picks, read only their `preview.md` cards (paths in the index). Cards contain tokens such as `{colors.gold}` or `{typography.label.fontFamily}`: resolve them from the YAML front matter at the top of that template's `design.md` (up to the second `---`) and read nothing past it. Never guess a token's value.
-4. A custom wildcard needs a deliberate visual thesis — distinctive typography, a committed palette, a recognizable layout system, one strong graphic device — and must imply a system that extends to section, content, quote, comparison and closing slides.
-5. Write the four files per letter and the comparison page exactly as in [reveal-template.md](reveal-template.md) ("Preview Routes", "Comparison Page"). Each preview is the user's real title slide.
-6. Run **Checks** on each of `/preview/a`, `/preview/b` and `/preview/c` — the checker must run on every preview route, since `/previews` itself has no deck — then open `/previews` and confirm it loads.
+1. Read [STYLE_PRESETS.md](STYLE_PRESETS.md) and [bold-template-pack/selection-index.json](bold-template-pack/selection-index.json) in full. Do not read any `design.md` yet.
+2. Write three **directions** for this deck, each one sentence tied to the brief (audience, occasion, content):
+   - **A — Expected:** what this audience would consider appropriate. Filled by a preset from `STYLE_PRESETS.md`, executed well.
+   - **B — Elevated:** what would make the deck feel more considered than they expect. Filled by a bold template with a clear editorial or brand character.
+   - **C — Memorable:** what they would still remember tomorrow. Filled by a second bold template or a custom design built around one idea from the content.
+   - If the brief names a preset or template, it fills the slot whose direction it best matches; the other two directions are chosen around it.
+3. **Choose by fit.** For each direction, shortlist every candidate that fits the brief — `mood`, `tone`, `formality` and `density` match, `best_for` is a reasonable match (a soft signal), and nothing in `avoid_for` applies — and leave out anything named in **Exclude styles**. Pick the candidate that best serves that direction, judged on the brief, not its position in a file. If no template fits C well, make C custom rather than forcing one.
+4. **Then check difference.** Any two picks must differ in at least two of: palette family (e.g. navy/gold vs. warm neutrals vs. monochrome vs. saturated), light vs. dark, and display typeface character (serif, geometric sans, grotesk, mono/technical). If two collide, swap the weaker fit for the next-best candidate for its direction. Fit never loses to variety: when the brief clearly calls for a dark or a formal deck, all three can be dark or formal as long as palettes and type differ.
+5. For bold picks, read only their `preview.md` cards (paths in the index). Cards contain tokens such as `{colors.gold}` or `{typography.label.fontFamily}`: resolve them from the YAML front matter at the top of that template's `design.md` (up to the second `---`) and read nothing past it. Never guess a token's value.
+6. A custom design needs a deliberate visual thesis — distinctive typography, a committed palette, a recognizable layout system, one strong graphic device — and must imply a system that extends to section, content, quote, comparison and closing slides.
+7. Write the four files per letter and the comparison page exactly as in [reveal-template.md](reveal-template.md) ("Preview Routes", "Comparison Page"). Each preview is the user's real title slide.
+8. Run **Checks** on each of `/preview/a`, `/preview/b` and `/preview/c` — the checker must run on every preview route, since `/previews` itself has no deck — then open `/previews` and confirm it loads.
 
 ## Mode: deck
 
@@ -116,7 +116,7 @@ Writes `public/deck/deck.pdf` (served at `/deck/deck.pdf`), one 1920×1080 page 
 
 End with a short summary and stop.
 
-- **previews:** a table of `letter | style name | source (preset: <name> / bold: <slug> / custom) | one-line description`. The caller builds the user's choice from it.
+- **previews:** a table of `letter | direction | style name | source (preset: <name> / bold: <slug> / custom) | why it fits this brief (one line)`. The caller builds the user's choice from it and passes the style names and slugs back as **Exclude styles** if the user asks for different options.
 - **deck / revise:** style name, slide count, what changed, routes.
 - **Assumptions:** anything you decided because the brief didn't say.
 

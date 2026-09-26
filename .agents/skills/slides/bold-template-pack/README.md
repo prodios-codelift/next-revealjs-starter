@@ -27,23 +27,7 @@ generation should use `selection-index.json` only.
 
 ## How To Use In Frontend Slides
 
-Preview mix:
-
-- 1 safe option from `STYLE_PRESETS.md`
-- at least 1 bold option from this pack
-- 1 wildcard option, which may be another bold template from this pack or a
-  self-generated custom design
-
-Adjust the tone inside that default mix:
-
-- For board, legal, regulatory, healthcare, investor-update, or highly formal
-  internal decks, make the safe option very restrained and choose calmer,
-  higher-formality bold templates. The wildcard should feel authoritative and
-  specific, not merely decorative.
-- For bold, editorial, expressive, experimental, or highly designed decks, keep
-  the safe option as a readable fallback, choose one strong bold template, and
-  use the wildcard for either a second adventurous template or a custom design
-  that better matches the user's occasion and vibe.
+Preview mix: follow the three directions in [../SKILL.md](../SKILL.md) (**Mode: previews**) — A Expected (a preset), B Elevated (a bold template), C Memorable (a second bold template or a custom design) — chosen by fit to the brief first, then checked for real difference in palette, light/dark and typeface character.
 
 If the wildcard is custom, it must follow Frontend Slides' no-slop aesthetics:
 distinctive typography, a committed palette, a recognizable layout system, a
