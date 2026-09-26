@@ -66,7 +66,7 @@ Produce three title-slide previews of genuinely different styles.
 3. For bold picks, read only their `preview.md` cards (paths in the index). Cards contain tokens such as `{colors.gold}` or `{typography.label.fontFamily}`: resolve them from the YAML front matter at the top of that template's `design.md` (up to the second `---`) and read nothing past it. Never guess a token's value.
 4. A custom wildcard needs a deliberate visual thesis — distinctive typography, a committed palette, a recognizable layout system, one strong graphic device — and must imply a system that extends to section, content, quote, comparison and closing slides.
 5. Write the four files per letter and the comparison page exactly as in [reveal-template.md](reveal-template.md) ("Preview Routes", "Comparison Page"). Each preview is the user's real title slide.
-6. Run **Checks** on `/preview/a`, `/preview/b`, `/preview/c` and `/previews`.
+6. Run **Checks** on each of `/preview/a`, `/preview/b` and `/preview/c` — the checker must run on every preview route, since `/previews` itself has no deck — then open `/previews` and confirm it loads.
 
 ## Mode: deck
 
@@ -88,7 +88,7 @@ Produce three title-slide previews of genuinely different styles.
 ## Checks (mandatory before finishing)
 
 1. `npm run typecheck` — fix every error.
-2. For each route you touched, following [../agent-browser/SKILL.md](../agent-browser/SKILL.md):
+2. For each deck route you touched (`/`, or each `/preview/<x>`), following [../agent-browser/SKILL.md](../agent-browser/SKILL.md):
 
    ```bash
    agent-browser set viewport 1920 1080
@@ -97,7 +97,10 @@ Produce three title-slide previews of genuinely different styles.
    agent-browser eval "$(cat .agents/skills/slides/verify-slides.js)"
    ```
 
-   `issues` must be `[]`. Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements and reveal's `.r-stack` (children layered on purpose) when looking for overlaps, so step 3 must confirm no decoration covers text.
+   `issues` must be `[]`.
+   - `build-error`: the page failed to compile and shows Next's error overlay instead of the deck; `detail` holds the error. The full `next dev` output is in the log file named in your instructions — read its tail (`tail -n 80 <log>`) for the exact file and line. Fix the source, reopen the route and check again. If the error remains after the source is correct, stop and report it in your summary with the log excerpt; never report the build as done while a route shows it.
+   - `no-deck`: the page rendered but has no slides — a wrong route or a component that failed to render.
+   - Fix `clipped`, `out-of-bounds` and `overlap` by splitting or restructuring the slide, not by shrinking type. Use `data-bleed` only for deliberate off-canvas decoration. The checker ignores absolutely-positioned elements and reveal's `.r-stack` (children layered on purpose) when looking for overlaps, so step 3 must confirm no decoration covers text.
 3. Screenshot every slide (`agent-browser open http://localhost:3000/#/<n>`, `agent-browser wait 1500` for fonts and entrance animations, then `agent-browser screenshot`) and look at each one; for previews, one screenshot per `/preview/<x>` route plus `/previews`. Check the design reads as intended and that no absolutely-positioned decoration covers text — not just that the checker passes.
 4. Authenticity scan over every slide (`innerText` would only return the current one): `agent-browser eval "[...document.querySelectorAll('.reveal .slides section')].map((s) => s.textContent).join('\\n')"` and confirm none of the banned words from **Slide Authenticity** appear.
 

@@ -1,5 +1,6 @@
 // Checks every slide of the reveal.js deck on the current page for clipped text,
-// content escaping the slide, and overlapping grid/flex panels.
+// content escaping the slide, and overlapping grid/flex panels. A page that failed to
+// compile (Next's error overlay) or has no deck is reported instead of passing.
 //
 //   agent-browser eval "$(cat .agents/skills/slides/verify-slides.js)"
 //
@@ -26,6 +27,32 @@
     Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) *
     Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
 
+  const nextErrorDialog = () =>
+    document.querySelector('nextjs-portal')?.shadowRoot?.querySelector('[data-nextjs-dialog]');
+
+  // Wait for the deck or Next's error overlay, whichever the page ends up showing.
+  for (let waited = 0; waited < 3000; waited += 100) {
+    if (document.querySelector('.reveal.ready') || nextErrorDialog()) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  const dialog = nextErrorDialog();
+  if (dialog) {
+    const label = dialog.querySelector('#nextjs__container_errors_label')?.textContent?.trim();
+    const body = dialog.querySelector('[data-nextjs-dialog-body]') ?? dialog;
+    return {
+      slides: 0,
+      issues: [
+        {
+          slide: '-',
+          type: 'build-error',
+          element: label || 'Next.js error',
+          detail: (body.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 400),
+        },
+      ],
+    };
+  }
+
   // Show every fragment and stop transitions so layout is final while measuring.
   const override = document.createElement('style');
   override.id = 'verify-slides-style';
@@ -41,6 +68,14 @@
     if (vertical.length) vertical.forEach((_, v) => indices.push([h, v, true]));
     else indices.push([h, 0, false]);
   });
+
+  if (indices.length === 0) {
+    override.remove();
+    return {
+      slides: 0,
+      issues: [{ slide: '-', type: 'no-deck', element: '', detail: 'no reveal slides on this page' }],
+    };
+  }
 
   const startHash = location.hash;
   const issues = [];
